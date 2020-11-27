@@ -60,6 +60,11 @@ public class CategoryService {
         log.debug("Request to delete Category: {}", id);
         log.debug("Deleting all products for the category: {}", id);
 
+        // if there is any product with the category being deleted, does not allow it
+        if (this.productRepository.findAllByCategoryId(id).stream().count() > 0) {
+            throw new IllegalStateException("There is a product with this category associated");
+        }
+
         this.productRepository.deleteAllByCategoryId(id);
 
         log.debug("Deleting Category: {}", id);

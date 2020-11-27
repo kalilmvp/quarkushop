@@ -1,9 +1,7 @@
 package com.kmvpsolutions.resources;
 
-import com.kmvpsolutions.domain.dto.CartDTO;
 import com.kmvpsolutions.domain.dto.CategoryDTO;
 import com.kmvpsolutions.domain.dto.ProductDTO;
-import com.kmvpsolutions.service.CartService;
 import com.kmvpsolutions.service.CategoryService;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
