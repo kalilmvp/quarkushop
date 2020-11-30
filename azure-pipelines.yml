@@ -24,8 +24,8 @@ steps:
 - task: Docker@2
   displayName: 'Docker Multistage Build'
   inputs:
-    containerRegistry: 'nebrass@DockerHub'
-    repository: 'nebrass/quarkushop-monolithic-application'
+    containerRegistry: 'kalilmvp@DockerHub'
+    repository: 'kalilmvp/quarkushop-monolithic-application'
     command: 'build'
     Dockerfile: '**/Dockerfile.multistage'
     buildContext: '.'
@@ -36,6 +36,6 @@ steps:
 - task: Docker@2
   displayName: 'Push Image to DockerHub'
   inputs:
-    containerRegistry: 'nebrass@DockerHub'
-    repository: 'nebrass/quarkushop-monolithic-application'
+    containerRegistry: 'kalilmvp@DockerHub'
+    repository: 'kalilmvp/quarkushop-monolithic-application'
     command: 'push'
