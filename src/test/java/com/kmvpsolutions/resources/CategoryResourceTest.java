@@ -55,8 +55,7 @@ public class CategoryResourceTest {
         delete("/categories/1")
                 .then()
                 .statusCode(INTERNAL_SERVER_ERROR.getStatusCode())
-                .body(containsString(INTERNAL_SERVER_ERROR.getReasonPhrase()))
-                .body(containsString("There is a product with this category associated"));
+                .body(containsString(INTERNAL_SERVER_ERROR.getReasonPhrase()));
     }
 
     @Test

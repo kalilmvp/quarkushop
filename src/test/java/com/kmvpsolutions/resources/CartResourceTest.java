@@ -3,6 +3,7 @@ package com.kmvpsolutions.resources;
 import com.kmvpsolutions.domain.enums.CartStatus;
 import com.kmvpsolutions.utils.TestContainerResource;
 import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkus.test.junit.DisabledOnNativeImage;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +20,7 @@ import static javax.ws.rs.core.Response.Status.*;
 import static org.hamcrest.Matchers.*;
 import static org.assertj.core.api.Assertions.*;
 
+@DisabledOnNativeImage
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
 public class CartResourceTest {
