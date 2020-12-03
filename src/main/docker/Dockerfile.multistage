@@ -12,6 +12,7 @@ RUN mvn -f /usr/src/app/pom.xml -Pnative clean package -DskipTests -DskipITs
 FROM registry.access.redhat.com/ubi8/ubi-minimal
 WORKDIR /work/
 COPY --from=build /usr/src/app/target/*-runner /work/application
+#COPY --from=build /usr/src/app/src/* /work/src
 
 # set up permissions for user `1001`
 RUN chmod 775 /work /work/application \
@@ -22,4 +23,4 @@ RUN chmod 775 /work /work/application \
 EXPOSE 8080
 USER 1001
 
-CMD echo "The application will start in 10s..." && sleep 10 && ./application -Dquarkus.http.host=0.0.0.0
+CMD echo "The application will start in 10s..." && sleep 5 && ./application -Dquarkus.http.host=0.0.0.0
