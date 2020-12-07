@@ -1,10 +1,10 @@
 package com.kmvpsolutions.resources;
 
 import com.kmvpsolutions.domain.dto.ProductDTO;
-import com.kmvpsolutions.service.PaymentService;
 import com.kmvpsolutions.service.ProductService;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -49,12 +49,14 @@ public class ProductResource {
         return this.productService.countByCategoryId(id);
     }
 
+    @RolesAllowed("admin")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public ProductDTO create(ProductDTO productDTO) {
         return this.productService.create(productDTO);
     }
 
+    @RolesAllowed("admin")
     @DELETE
     @Path("/{id}")
     public void delete(@PathParam("id") Long id) {

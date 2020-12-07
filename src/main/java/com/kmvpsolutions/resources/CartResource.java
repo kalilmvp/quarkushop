@@ -2,6 +2,7 @@ package com.kmvpsolutions.resources;
 
 import com.kmvpsolutions.domain.dto.CartDTO;
 import com.kmvpsolutions.service.CartService;
+import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -10,6 +11,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
+@Authenticated
 @ApplicationScoped
 @Path("/carts")
 @Produces(MediaType.APPLICATION_JSON)

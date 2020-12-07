@@ -2,14 +2,17 @@ package com.kmvpsolutions.resources;
 
 import com.kmvpsolutions.domain.dto.PaymentDTO;
 import com.kmvpsolutions.service.PaymentService;
+import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
+@Authenticated
 @ApplicationScoped
 @Path("/payments")
 @Produces(MediaType.APPLICATION_JSON)
@@ -19,6 +22,7 @@ public class PaymentResource {
     @Inject
     PaymentService paymentService;
 
+    @RolesAllowed("admin")
     @GET
     public List<PaymentDTO> findAll() {
         return this.paymentService.findAll();
@@ -42,6 +46,7 @@ public class PaymentResource {
         return this.paymentService.create(paymentDTO);
     }
 
+    @RolesAllowed("admin")
     @DELETE
     @Path("/{id}")
     public void delete(@PathParam("id") Long id) {

@@ -2,14 +2,17 @@ package com.kmvpsolutions.resources;
 
 import com.kmvpsolutions.domain.dto.OrderDTO;
 import com.kmvpsolutions.service.OrderService;
+import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
+@Authenticated
 @ApplicationScoped
 @Path("/orders")
 @Produces(MediaType.APPLICATION_JSON)
@@ -19,6 +22,7 @@ public class OrderResource {
     @Inject
     OrderService orderService;
 
+    @RolesAllowed("admin")
     @GET
     public List<OrderDTO> findAll() {
         return this.orderService.findAll();

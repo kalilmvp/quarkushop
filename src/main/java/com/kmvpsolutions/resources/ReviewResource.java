@@ -4,6 +4,7 @@ import com.kmvpsolutions.domain.dto.ReviewDTO;
 import com.kmvpsolutions.service.ReviewService;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -36,6 +37,7 @@ public class ReviewResource {
         return this.reviewService.findReviewsByProductId(id);
     }
 
+    @RolesAllowed("user")
     @POST
     @Path("/product/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -43,6 +45,7 @@ public class ReviewResource {
         return this.reviewService.create(reviewDTO, id);
     }
 
+    @RolesAllowed("admin")
     @DELETE
     @Path("/{id}")
     public void delete(@PathParam("id") Long id) {
