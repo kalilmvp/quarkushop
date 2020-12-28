@@ -23,14 +23,24 @@ public class TokenService {
     @ConfigProperty(name = "keycloak.credentials.client-id", defaultValue = "undefined")
     Provider<String> clientIdProvider;
 
-    public String getAccessToken(String userName, String password, String clientSecret)
+    public String getAccessToken(String userName,
+                                 String password) throws IOException, InterruptedException {
+        return this.getAccessToken(this.jwtIssuerUrlProvider.get(), userName, password, this.clientIdProvider.get(), null);
+    }
+
+    public String getAccessToken(
+            String jwtIssuerUrlProvider,
+            String userName,
+            String password,
+            String clientId,
+            String clientSecret)
             throws IOException, InterruptedException {
 
-        String keyCloakTokenEndpoint = this.jwtIssuerUrlProvider.get()
+        String keyCloakTokenEndpoint = jwtIssuerUrlProvider
                 .concat("/protocol/openid-connect/token");
 
         String requestBody = "username=".concat(userName).concat("&password=").concat(password)
-                .concat("&grant_type=password").concat("&client_id=").concat(this.clientIdProvider.get());
+                .concat("&grant_type=password").concat("&client_id=").concat(clientId);
 
         if (clientSecret != null) {
             requestBody = requestBody.concat("&client_secret=").concat(clientSecret);

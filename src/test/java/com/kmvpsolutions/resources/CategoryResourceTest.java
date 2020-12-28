@@ -1,8 +1,10 @@
 package com.kmvpsolutions.resources;
 
+import com.kmvpsolutions.utils.KeyCloakRealmResource;
 import com.kmvpsolutions.utils.TestContainerResource;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -16,7 +18,17 @@ import static org.assertj.core.api.Assertions.*;
 
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
+@QuarkusTestResource(KeyCloakRealmResource.class)
 public class CategoryResourceTest {
+
+    private static String ADMIN_BEARER_TOKEN;
+    private static String TEST_BEARER_TOKEN;
+
+    @BeforeAll
+    static void init() {
+        ADMIN_BEARER_TOKEN =  System.getProperty("quarkus-admin-access-token");
+        TEST_BEARER_TOKEN = System.getProperty("quarkus-test-access-token");
+    }
 
     @Test
     void testFindAll() {
@@ -24,6 +36,20 @@ public class CategoryResourceTest {
                 .then()
                     .statusCode(OK.getStatusCode())
                     .body("size()", greaterThan(0));
+    }
+
+    @Test
+    void testFindAllWithAdminRole() {
+        given().when()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ADMIN_BEARER_TOKEN)
+                .get("/categories")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .body("size()", is(2))
+                .body(containsString("Phones & Smartphones"))
+                .body(containsString("Mobile"))
+                .body(containsString("Computers and Laptops"))
+                .body(containsString("PC"));
     }
 
     @Test
@@ -50,9 +76,21 @@ public class CategoryResourceTest {
                 .statusCode(OK.getStatusCode())
                 .body("size()", equalTo(0));
     }
+
+    @Test
+    void testDeleteFailBecauseOnlyAdminCanDoThisOperation() {
+        given().when()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
+        .delete("/categories/1")
+                .then()
+                .statusCode(FORBIDDEN.getStatusCode());
+    }
+
     @Test
     void testDeleteFailBecauseThereIsProductAssociated() {
-        delete("/categories/1")
+        given().when()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ADMIN_BEARER_TOKEN)
+                .delete("/categories/1")
                 .then()
                 .statusCode(INTERNAL_SERVER_ERROR.getStatusCode())
                 .body(containsString(INTERNAL_SERVER_ERROR.getReasonPhrase()));
@@ -67,8 +105,9 @@ public class CategoryResourceTest {
 
         // create the new category
         var response =
-                given()
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                given().when()
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + ADMIN_BEARER_TOKEN)
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                     .body(requestParams)
                     .post("/categories")
                         .then()

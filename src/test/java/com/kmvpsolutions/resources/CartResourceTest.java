@@ -1,10 +1,12 @@
 package com.kmvpsolutions.resources;
 
 import com.kmvpsolutions.domain.enums.CartStatus;
+import com.kmvpsolutions.utils.KeyCloakRealmResource;
 import com.kmvpsolutions.utils.TestContainerResource;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.DisabledOnNativeImage;
 import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
@@ -23,12 +25,23 @@ import static org.assertj.core.api.Assertions.*;
 @DisabledOnNativeImage
 @QuarkusTest
 @QuarkusTestResource(TestContainerResource.class)
+@QuarkusTestResource(KeyCloakRealmResource.class)
 public class CartResourceTest {
 
     private static final String INSERT_WRONG_CART_IN_DB =
             "insert into carts values (999, current_timestamp, current_timestamp, 'NEW', 3)";
     private static final String DELETE_WRONG_CART_IN_DB =
             "delete from carts where id = 999";
+
+    private static String ADMIN_BEARER_TOKEN;
+    private static String TEST_BEARER_TOKEN;
+
+    @BeforeAll
+    static void init() {
+        ADMIN_BEARER_TOKEN = System.getProperty("quarkus-admin-access-token");
+        TEST_BEARER_TOKEN = System.getProperty("quarkus-test-access-token");
+    }
+
     @Inject
     DataSource datasource;
 
@@ -36,27 +49,38 @@ public class CartResourceTest {
     void testFindAll() {
         get("/carts")
                 .then()
+                .statusCode(UNAUTHORIZED.getStatusCode());
+    }
+
+    @Test
+    void testFindAllAuthorized() {
+        given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
+        .get("/carts")
+                .then()
                     .statusCode(OK.getStatusCode())
                     .body("size()", greaterThan(0));
     }
 
     @Test
     void testFindAllActiveCarts() {
-        get("/carts/active")
+        given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
+        .get("/carts/active")
                 .then()
                 .statusCode(OK.getStatusCode());
     }
 
     @Test
     void testFindAllInactiveCarts() {
-        get("/carts/inactive")
+        given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
+        .get("/carts/inactive")
                 .then()
                 .statusCode(NOT_FOUND.getStatusCode());
     }
 
     @Test
     void testGetActiveCartForCustomer() {
-        get("/carts/customer/3")
+        given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
+        .get("/carts/customer/3")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("Peter"));
@@ -64,13 +88,15 @@ public class CartResourceTest {
 
     @Test
     void testFindById() {
-        get("/carts/3")
+        given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
+        .get("/carts/3")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("status"))
                 .body(containsString("NEW"));
 
-        get("/carts/100")
+        given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
+        .get("/carts/100")
                 .then()
                 .statusCode(NO_CONTENT.getStatusCode())
                 .body(emptyOrNullString());
@@ -78,17 +104,20 @@ public class CartResourceTest {
 
     @Test
     void testDelete() {
-        get("/carts/active")
+        given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
+        .get("/carts/active")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("Jason"))
                 .body(containsString("NEW"));
 
-        delete("/carts/1")
+        given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
+        .delete("/carts/1")
                 .then()
                 .statusCode(NO_CONTENT.getStatusCode());
 
-        get("/carts/1")
+        given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
+        .get("/carts/1")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .body(containsString("Jason"))
@@ -99,7 +128,8 @@ public class CartResourceTest {
     void testGetActiveCartForCustomerWhenThereAreTwoCartsInDB() {
         this.executeSQL(INSERT_WRONG_CART_IN_DB);
 
-        get("/carts/customer/3")
+        given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
+        .get("/carts/customer/3")
                 .then()
                 .statusCode(INTERNAL_SERVER_ERROR.getStatusCode())
                 .body(containsString(INTERNAL_SERVER_ERROR.getReasonPhrase()))
@@ -117,7 +147,7 @@ public class CartResourceTest {
 
         // create a new customer to create the cart
         var customerId =
-                given()
+                given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                     .body(requestParams)
                     .post("/customers")
@@ -128,7 +158,9 @@ public class CartResourceTest {
                         .getInt("id");
 
         // create the cart for the customer
-        var response = post("/carts/customer/" + customerId)
+        var response =
+                given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
+                .post("/carts/customer/" + customerId)
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
@@ -138,8 +170,11 @@ public class CartResourceTest {
         assertThat(response.get("id")).isNotNull();
         assertThat(response).containsEntry("status", CartStatus.NEW.name());
 
-        delete("/carts/" + response.get("id")).then().statusCode(NO_CONTENT.getStatusCode());
-        delete("/customers/" + customerId).then().statusCode(NO_CONTENT.getStatusCode());
+        given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
+        .delete("/carts/" + response.get("id")).then().statusCode(NO_CONTENT.getStatusCode());
+
+        given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
+        .delete("/customers/" + customerId).then().statusCode(NO_CONTENT.getStatusCode());
     }
 
     @Test
@@ -151,7 +186,7 @@ public class CartResourceTest {
 
         // create a new customer to create the cart
         var customerId =
-                given()
+                given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .body(requestParams)
                         .post("/customers")
@@ -162,14 +197,17 @@ public class CartResourceTest {
                         .getInt("id");
 
         // create the cart for the customer
-        var cartId = post("/carts/customer/" + customerId)
+        var cartId =
+                given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
+                .post("/carts/customer/" + customerId)
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
                 .jsonPath()
                 .getLong("id");
 
-        post("/carts/customer/" + customerId)
+        given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
+        .post("/carts/customer/" + customerId)
                 .then()
                 .statusCode(INTERNAL_SERVER_ERROR.getStatusCode())
                 .body(containsString(INTERNAL_SERVER_ERROR.getReasonPhrase()))
@@ -179,8 +217,8 @@ public class CartResourceTest {
 
         assertThat(cartId).isNotNull();
 
-        delete("/carts/" + cartId).then().statusCode(NO_CONTENT.getStatusCode());
-        delete("/customers/" + customerId).then().statusCode(NO_CONTENT.getStatusCode());
+        given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN).delete("/carts/" + cartId).then().statusCode(NO_CONTENT.getStatusCode());
+        given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN).delete("/customers/" + customerId).then().statusCode(NO_CONTENT.getStatusCode());
 
     }
 

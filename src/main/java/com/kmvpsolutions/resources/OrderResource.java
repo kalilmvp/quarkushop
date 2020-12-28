@@ -13,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Authenticated
-@ApplicationScoped
 @Path("/orders")
 @Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "Order", description = "All orders methods")

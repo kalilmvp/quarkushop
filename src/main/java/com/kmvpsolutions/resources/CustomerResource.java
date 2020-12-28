@@ -1,10 +1,8 @@
 package com.kmvpsolutions.resources;
 
-import com.kmvpsolutions.domain.dto.CategoryDTO;
 import com.kmvpsolutions.domain.dto.CustomerDTO;
-import com.kmvpsolutions.domain.dto.ProductDTO;
-import com.kmvpsolutions.service.CategoryService;
 import com.kmvpsolutions.service.CustomerService;
+import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -13,10 +11,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@ApplicationScoped
 @Path("/customers")
 @Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "Customer", description = "All customer methods")
+@Authenticated
 public class CustomerResource {
 
     @Inject

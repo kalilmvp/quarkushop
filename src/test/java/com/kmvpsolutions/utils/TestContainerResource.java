@@ -2,7 +2,6 @@ package com.kmvpsolutions.utils;
 
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.utility.DockerImageName;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -12,7 +12,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@ApplicationScoped
 @Path("/categories")
 @Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "Category", description = "All category methods")

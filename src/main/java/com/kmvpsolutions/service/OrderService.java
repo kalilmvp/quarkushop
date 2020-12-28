@@ -58,7 +58,7 @@ public class OrderService {
 
         Long cartId = orderDTO.getCart().getId();
 
-        Cart cart = this.cartRepository.findById(orderDTO.getId()).orElseThrow(
+        Cart cart = this.cartRepository.findById(cartId).orElseThrow(
                 () -> new IllegalStateException("The cart with ID [" + cartId + "] was not found!")
         );
 

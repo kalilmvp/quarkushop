@@ -4,6 +4,7 @@ import com.kmvpsolutions.domain.dto.CustomerDTO;
 import com.kmvpsolutions.domain.dto.OrderItemDTO;
 import com.kmvpsolutions.service.CustomerService;
 import com.kmvpsolutions.service.OrderItemService;
+import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -16,6 +17,7 @@ import java.util.List;
 @Path("/order-items")
 @Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "Order Items", description = "All order-items methods")
+@Authenticated
 public class OrderItemResource {
 
     @Inject

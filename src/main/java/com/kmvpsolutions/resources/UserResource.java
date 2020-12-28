@@ -34,10 +34,9 @@ public class UserResource {
     @Path("/access-token")
     @Produces(MediaType.TEXT_PLAIN)
     public String getAccessToken(@QueryParam("username") String userName,
-                                       @QueryParam("password") String password)
-            throws IOException, InterruptedException {
+                                       @QueryParam("password") String password) throws IOException, InterruptedException {
 
-        return this.tokenService.getAccessToken(userName, password, null);
+        return this.tokenService.getAccessToken(userName, password);
     }
 
     @GET
