@@ -5,13 +5,11 @@ import com.kmvpsolutions.service.ReviewService;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@ApplicationScoped
 @Path("/reviews")
 @Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "Review", description = "All review methods")

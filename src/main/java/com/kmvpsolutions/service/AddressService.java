@@ -1,17 +1,15 @@
 package com.kmvpsolutions.service;
 
 import com.kmvpsolutions.domain.Address;
-import com.kmvpsolutions.domain.Customer;
 import com.kmvpsolutions.domain.dto.AddressDTO;
-import com.kmvpsolutions.domain.dto.CustomerDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 
 @Slf4j
-@ApplicationScoped
 @Transactional
+@ApplicationScoped
 public class AddressService {
 
     public static Address createFromDTO(AddressDTO addressDTO) {

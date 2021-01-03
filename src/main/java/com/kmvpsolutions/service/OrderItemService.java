@@ -3,13 +3,8 @@ package com.kmvpsolutions.service;
 import com.kmvpsolutions.dao.OrderItemRepository;
 import com.kmvpsolutions.dao.OrderRepository;
 import com.kmvpsolutions.dao.ProductRepository;
-import com.kmvpsolutions.dao.ReviewRepository;
-import com.kmvpsolutions.domain.Order;
 import com.kmvpsolutions.domain.OrderItem;
-import com.kmvpsolutions.domain.Product;
-import com.kmvpsolutions.domain.Review;
 import com.kmvpsolutions.domain.dto.OrderItemDTO;
-import com.kmvpsolutions.domain.dto.ReviewDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -19,8 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@ApplicationScoped
 @Transactional
+@ApplicationScoped
 public class OrderItemService {
 
     @Inject

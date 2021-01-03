@@ -1,13 +1,9 @@
 package com.kmvpsolutions.service;
 
-import com.kmvpsolutions.dao.CategoryRepository;
 import com.kmvpsolutions.dao.ProductRepository;
 import com.kmvpsolutions.dao.ReviewRepository;
-import com.kmvpsolutions.domain.Category;
 import com.kmvpsolutions.domain.Product;
 import com.kmvpsolutions.domain.Review;
-import com.kmvpsolutions.domain.dto.CategoryDTO;
-import com.kmvpsolutions.domain.dto.ProductDTO;
 import com.kmvpsolutions.domain.dto.ReviewDTO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,8 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@ApplicationScoped
 @Transactional
+@ApplicationScoped
 public class ReviewService {
 
     @Inject

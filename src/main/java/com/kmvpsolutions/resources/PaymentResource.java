@@ -13,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Authenticated
-@ApplicationScoped
 @Path("/payments")
 @Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "Payment", description = "All payment methods")
@@ -35,7 +34,7 @@ public class PaymentResource {
     }
 
     @GET
-    @Path("/price{max}")
+    @Path("/price/{max}")
     public List<PaymentDTO> findById(@PathParam("max") Double max) {
         return this.paymentService.findByPriceRange(max);
     }

@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@ApplicationScoped
 @Transactional
+@ApplicationScoped
 public class CustomerService {
 
     @Inject

@@ -1,19 +1,15 @@
 package com.kmvpsolutions.resources;
 
-import com.kmvpsolutions.domain.dto.CustomerDTO;
 import com.kmvpsolutions.domain.dto.OrderItemDTO;
-import com.kmvpsolutions.service.CustomerService;
 import com.kmvpsolutions.service.OrderItemService;
 import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@ApplicationScoped
 @Path("/order-items")
 @Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "Order Items", description = "All order-items methods")

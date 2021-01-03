@@ -3,7 +3,6 @@ package com.kmvpsolutions.service;
 import com.kmvpsolutions.dao.*;
 import com.kmvpsolutions.domain.Cart;
 import com.kmvpsolutions.domain.Order;
-import com.kmvpsolutions.domain.OrderItem;
 import com.kmvpsolutions.domain.dto.OrderDTO;
 import com.kmvpsolutions.domain.dto.OrderItemDTO;
 import com.kmvpsolutions.domain.enums.OrderStatus;
@@ -20,8 +19,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
-@ApplicationScoped
 @Transactional
+@ApplicationScoped
 public class OrderService {
 
     @Inject

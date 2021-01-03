@@ -1,13 +1,9 @@
 package com.kmvpsolutions.service;
 
-import com.kmvpsolutions.dao.CartRepository;
 import com.kmvpsolutions.dao.OrderRepository;
 import com.kmvpsolutions.dao.PaymentRepository;
-import com.kmvpsolutions.domain.Cart;
 import com.kmvpsolutions.domain.Order;
 import com.kmvpsolutions.domain.Payment;
-import com.kmvpsolutions.domain.dto.OrderDTO;
-import com.kmvpsolutions.domain.dto.OrderItemDTO;
 import com.kmvpsolutions.domain.dto.PaymentDTO;
 import com.kmvpsolutions.domain.enums.OrderStatus;
 import com.kmvpsolutions.domain.enums.PaymentStatus;
@@ -17,15 +13,12 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
-@ApplicationScoped
 @Transactional
+@ApplicationScoped
 public class PaymentService {
 
     @Inject
