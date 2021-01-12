@@ -83,7 +83,7 @@ public class CartResourceTest {
         .get("/carts/customer/3")
                 .then()
                 .statusCode(OK.getStatusCode())
-                .body(containsString("Peter"));
+                .body(containsString("\"customer\":3"));
     }
 
     @Test
@@ -108,7 +108,7 @@ public class CartResourceTest {
         .get("/carts/active")
                 .then()
                 .statusCode(OK.getStatusCode())
-                .body(containsString("Jason"))
+                .body(containsString("\"customer\":1"))
                 .body(containsString("NEW"));
 
         given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + TEST_BEARER_TOKEN)
@@ -120,7 +120,7 @@ public class CartResourceTest {
         .get("/carts/1")
                 .then()
                 .statusCode(OK.getStatusCode())
-                .body(containsString("Jason"))
+                .body(containsString("\"customer\":1"))
                 .body(containsString("CANCELED"));
     }
 

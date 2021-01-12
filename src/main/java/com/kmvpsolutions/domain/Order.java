@@ -1,22 +1,18 @@
 package com.kmvpsolutions.domain;
 
+import com.kmvpsolutions.commons.domain.AbstractEntity;
 import com.kmvpsolutions.domain.enums.OrderStatus;
-import com.kmvpsolutions.domain.parent.AbstractEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.Objects;
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString(callSuper = true)
 @Entity
 @Table(name = "orders")
@@ -34,46 +30,16 @@ public class Order extends AbstractEntity {
     @Column(name = "shipped")
     private ZonedDateTime shipped;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(unique = true)
-    private Payment payment;
+    @Column(name = "payment_id", unique = true)
+    private Long paymentId;
 
     @Embedded
     private Address shipmentAddress;
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<OrderItem> orderItems;
 
     @OneToOne
     private Cart cart;
-
-    public Order(@NotNull BigDecimal price, @NotNull OrderStatus status,
-                 ZonedDateTime shipped, Payment payment, Address shipmentAddress,
-                 Set<OrderItem> orderItems, Cart cart) {
-        this.price = price;
-        this.status = status;
-        this.shipped = shipped;
-        this.payment = payment;
-        this.shipmentAddress = shipmentAddress;
-        this.orderItems = orderItems;
-        this.cart = cart;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Order order = (Order) o;
-        return Objects.equals(price, order.price) && status == order.status &&
-                Objects.equals(shipped, order.shipped) &&
-                Objects.equals(payment, order.payment) &&
-                Objects.equals(shipmentAddress, order.shipmentAddress) &&
-                Objects.equals(orderItems, order.orderItems) &&
-                Objects.equals(cart, order.cart);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(price, status, shipped, payment, shipmentAddress, cart);
-    }
 }

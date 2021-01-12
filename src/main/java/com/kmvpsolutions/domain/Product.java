@@ -1,11 +1,8 @@
 package com.kmvpsolutions.domain;
 
 import com.kmvpsolutions.domain.enums.ProductStatus;
-import com.kmvpsolutions.domain.parent.AbstractEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.kmvpsolutions.commons.domain.AbstractEntity;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,9 +11,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString(callSuper = true)
 @Entity
 @Table(name = "products")
@@ -49,34 +46,4 @@ public class Product extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
-    public Product(@NotNull String name, @NotNull String description,
-                   @NotNull BigDecimal price, @NotNull ProductStatus status,
-                   Integer salesCounter, Set<Review> reviews, Category category) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.status = status;
-        this.salesCounter = salesCounter;
-        this.reviews = reviews;
-        this.category = category;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-        return Objects.equals(name, product.name) &&
-                Objects.equals(description, product.description) &&
-                Objects.equals(price, product.price) && status == product.status &&
-                Objects.equals(salesCounter, product.salesCounter) &&
-                Objects.equals(reviews, product.reviews) &&
-                Objects.equals(category, product.category);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, description, price, category);
-    }
 }

@@ -143,7 +143,7 @@ public class OrderResourceTest {
                 .get("/orders/customer/1")
                 .then()
                 .statusCode(OK.getStatusCode())
-                .body(containsString("jason.bourne@mail.hello"));
+                .body(containsString("\"customer\":1"));
     }
 
     @Test
@@ -192,11 +192,8 @@ public class OrderResourceTest {
         assertThat(cartResponse.get("id")).isNotNull();
         assertThat(cartResponse).containsEntry("status", CartStatus.NEW.name());
 
-        var customerResponse = (Map<Object, Object>) cartResponse.get("customer");
-        assertThat(customerResponse)
-                .containsEntry("email", "call.saul@mail.com")
-                .containsEntry("firstName", "Saul")
-                .containsEntry("lastName", "Berenson");
+        var customerResponse = (Integer) cartResponse.get("customer");
+        assertThat(customerResponse).isEqualTo(newCustomerId);
 
         given().when().header(HttpHeaders.AUTHORIZATION, "Bearer " + ADMIN_BEARER_TOKEN)
                 .delete("/orders/" + newOrderId)

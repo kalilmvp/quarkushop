@@ -1,6 +1,6 @@
 package com.kmvpsolutions.utils;
 
-import com.kmvpsolutions.service.security.TokenService;
+import com.kmvpsolutions.commons.security.TokenService;
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 import org.junit.ClassRule;
 import org.testcontainers.containers.DockerComposeContainer;

@@ -1,18 +1,17 @@
 package com.kmvpsolutions.domain;
 
-import com.kmvpsolutions.domain.parent.AbstractEntity;
-import lombok.Getter;
+import com.kmvpsolutions.commons.domain.AbstractEntity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString(callSuper = true)
 @Entity
 @Table(name = "order_items")
@@ -22,30 +21,9 @@ public class OrderItem extends AbstractEntity {
     @Column(name = "quantity", nullable = false)
     private Long quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Product product;
+    @Column(name = "product_id")
+    private Long productId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Order order;
-
-    public OrderItem(@NotNull Long quantity, Product product, Order order) {
-        this.quantity = quantity;
-        this.product = product;
-        this.order = order;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        OrderItem orderItem = (OrderItem) o;
-        return Objects.equals(quantity, orderItem.quantity) &&
-                Objects.equals(product, orderItem.product) &&
-                Objects.equals(order, orderItem.order);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(quantity, product, order);
-    }
 }
